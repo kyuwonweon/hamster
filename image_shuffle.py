@@ -4,7 +4,7 @@ import random
 
 image_filenames = [
     'images/thumbsup.jpg',
-    'images/v.jpg',
+    'images/v.png',
     'images/onehand.jpg',
     'images/twohand.jpg',
     'images/together.jpg'
