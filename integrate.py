@@ -44,18 +44,22 @@ def detect_gesture(handmarks):
     if num_hands == 0:
         return State.SHUFFLING
     elif num_hands == 2:
-        wrist1 = handmarks[0].landmark[0]
-        wrist2 = handmarks[1].landmark[0]
-        distance = math.hypot(wrist1.x - wrist2.x, wrist1.y, wrist2.y)
+        lm1 = handmarks[0].landmark
+        lm2 = handmarks[1].landmark
+        dist_index = math.hypot(lm1[8].x - lm2[8].x, lm1[8].y - lm2[8].y)
+        dist_thumb = math.hypot(lm1[4].x - lm2[4].x, lm1[4].y - lm2[4].y)
+        dist_middle = math.hypot(lm1[12].x - lm2[12].x, lm1[12].y - lm2[12].y)
+        dist_ring = math.hypot(lm1[16].x - lm2[16].x, lm1[16].y - lm2[16].y)
+        dist_pinky = math.hypot(lm1[20].x - lm2[20].x, lm1[20].y - lm2[20].y)
 
-        if distance < 0.2:
+        if dist_index and dist_thumb and dist_middle and dist_ring and dist_pinky < 0.1:
             return State.TWO_HANDS_TOGETHER
-        else:
-            return State.TWO_HANDS_APART
+        elif lm1[4].y < lm1[3].y and lm2[4].y < lm2[3].y:
+            return State.THUMBS_UP
+        return State.TWO_HANDS_APART
 
     # one hand landmark
     lm = handmarks[0].landmark
-    thumb_up = lm[4].y < lm[3].y
     index_up = lm[8].y < lm[6].y
     middle_up = lm[12].y < lm[10].y
     ring_up = lm[16].y < lm[14].y
@@ -65,8 +69,6 @@ def detect_gesture(handmarks):
         return State.PEACE
     elif index_up and middle_up and ring_up and pinky_up:
         return State.ONE_HAND
-    elif thumb_up and not index_up and not middle_up and not ring_up and not pinky_up:
-        return State.THUMBS_UP
     return State.SHUFFLING
 
 
