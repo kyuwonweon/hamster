@@ -52,10 +52,15 @@ def detect_gesture(handmarks):
         dist_ring = math.hypot(lm1[16].x - lm2[16].x, lm1[16].y - lm2[16].y)
         dist_pinky = math.hypot(lm1[20].x - lm2[20].x, lm1[20].y - lm2[20].y)
 
-        if dist_index and dist_thumb and dist_middle and dist_ring and dist_pinky < 0.1:
+        if (dist_index < 0.1 and dist_thumb < 0.1 and dist_middle < 0.1
+           and dist_ring < 0.1 and dist_pinky < 0.1):
             return State.TWO_HANDS_TOGETHER
         elif lm1[4].y < lm1[3].y and lm2[4].y < lm2[3].y:
-            return State.THUMBS_UP
+            if (lm1[8].y > lm1[6].y and lm1[12].y > lm1[10].y and
+               lm1[16].y > lm1[14].y and lm1[20].y > lm1[18].y and
+               lm2[8].y > lm2[6].y and lm2[12].y > lm2[10].y and
+               lm2[16].y > lm2[14].y and lm2[20].y > lm2[18].y):
+                return State.THUMBS_UP
         return State.TWO_HANDS_APART
 
     # one hand landmark
